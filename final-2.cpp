@@ -9,16 +9,16 @@
 
 using namespace std;
 
-struct Employee
+struct Student
 {
     string gender;
     string email;
     string name;
     string ID;
     string phoneNo;
-    string salary;
+    string GPA;
 }info ;
-stack<Employee> employees;
+stack<Student> students;
 string deleteTemp, zero = "0";
 
 
@@ -33,12 +33,12 @@ bool checkIDDuplicate(string id);
 bool checkPNDuplicate(string pn);
 
 void add();
-void displayEmployees();
-void searchEmployee();
-void deleteEmployee(string id);
+void displayStudents();
+void searchStudent();
+void deleteStudent(string id);
 
 void addID();
-void addSalary();
+void addGPA();
 int partition(vector<int>& arr1, vector<int>& arr2, int low, int high);
 void quicksort(vector<int>& arr1, vector<int>& arr2, int low, int high);
 void sortData();
@@ -68,7 +68,7 @@ void readCSVFile() {
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
-        Employee e;
+        Student e;
         if(!ss){
             continue;
         }
@@ -77,9 +77,9 @@ void readCSVFile() {
         getline(ss, e.email, ',');
         getline(ss, e.ID, ',');
         getline(ss, e.phoneNo, ',');
-        getline(ss, e.salary, ',');
+        getline(ss, e.GPA, ',');
         e.phoneNo.erase(0,2);
-        employees.push(e);
+        students.push(e);
     }
     file.close();
 }
@@ -200,13 +200,13 @@ void addID(){
     }while(!parse_correct);
 }
 
-void addSalary(){
+void addGPA(){
     bool parse_correct = true;
-    int addSalaryTemp;
+    int addGPATemp;
     do{
-        cout << "Salary: ";
-        getline(cin, info.salary);
-        if(!checkValidIntegerArray(info.salary)){
+        cout << "GPA: ";
+        getline(cin, info.GPA);
+        if(!checkValidIntegerArray(info.GPA)){
             parse_correct = false;
         } else {
             parse_correct = true;
@@ -226,11 +226,11 @@ bool checkValidIntegerArray(string n){
 }
 
 bool checkIDDuplicate(string id){
-    stack<Employee> tempStack = employees;
+    stack<Student> tempStack = students;
     bool found = false;
     //cout << id << "  " << id.size() << endl;
     while (!tempStack.empty()) {
-        Employee temp = tempStack.top();
+        Student temp = tempStack.top();
         tempStack.pop();
         //cout << temp.ID << "  " << temp.ID.size() << "\t" <<endl;
         
@@ -243,10 +243,10 @@ bool checkIDDuplicate(string id){
     return true;
 }
 bool checkPNDuplicate(string pn){
-    stack<Employee> tempStack = employees;
+    stack<Student> tempStack = students;
     bool found = false;
     while (!tempStack.empty()) {
-        Employee temp = tempStack.top();
+        Student temp = tempStack.top();
         tempStack.pop();
         if ((temp.phoneNo == pn) == 1) {
             cout << "Phone number already appeared in the database! Please check again\n";
@@ -283,81 +283,81 @@ void add(){
 
     addPhoneNo();
     
-    addSalary();
-    employees.push(info);
-    cout << info.ID.size() << "\t" << info.gender.size() << info.salary.size() << "\t" << endl;
+    addGPA();
+    students.push(info);
+    cout << info.ID.size() << "\t" << info.gender.size() << info.GPA.size() << "\t" << endl;
     info.phoneNo.insert(0, "'");
-    fout << info.name << "," << info.gender << "," << info.email << "," << info.ID << "," << info.phoneNo << "," << info.salary << endl;
+    fout << info.name << "," << info.gender << "," << info.email << "," << info.ID << "," << info.phoneNo << "," << info.GPA << endl;
     cout << info.phoneNo;
     fout.close();
 }
 
-void displayEmployees(){
+void displayStudents(){
     system("cls");
-    stack<Employee> tempStack = employees;
+    stack<Student> tempStack = students;
     if (tempStack.empty()) {
-        cout << "No employees in the system!\n";
+        cout << "No student in the system!\n";
     } else {
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
-        cout << "|                                               LIST OF EMPOYEES                                               |" << endl;
+        cout << "|                                               LIST OF STUDENTS                                               |" << endl;
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
         cout << "|    ID     |            Name          |  Gender |           Email          |" 
-                << "     Phone Number     |  Salary   |" << endl;
+                << "     Phone Number     |  GPA   |" << endl;
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
 
         while(!tempStack.empty()){
-            Employee temp = tempStack.top();
+            Student temp = tempStack.top();
             tempStack.pop();
             cout << "| " << left << setw(9) << temp.ID << " | " << setw(24) << temp.name << " | " << setw(7) 
                          << temp.gender << " | " << setw(24) << temp.email << " | " << setw(20) 
-                         << temp.phoneNo << " | " << setw(9) << temp.salary << " | " << endl; 
+                         << temp.phoneNo << " | " << setw(9) << temp.GPA << " | " << endl; 
             }
             cout << "----------------------------------------------------------------------------------------------------------------" << endl;
     }
 }
 
-void searchEmployee() {
-    stack<Employee> tempStack = employees;
+void searchStudent() {
+    stack<Student> tempStack = students;
     bool found = false;
     string id;
-    cout << "Enter the ID of the employee you want to find: ";
+    cout << "Enter the ID of the student you want to find: ";
     cin >> id;
     cin.ignore();
     //cout << id << endl;
 
     //cout << id << "  " << id.size() << endl;
     while (!tempStack.empty()) {
-        Employee temp = tempStack.top();
+        Student temp = tempStack.top();
         tempStack.pop();
         //cout << id << endl;
 
         //cout << temp.ID << "  " << (id == temp.ID)<< endl;
 
         if ((id == temp.ID) == 1) {
-            cout << "Employee Found!\n";
+            cout << "Student Found!\n";
             cout << "ID: " << temp.ID << endl;
             cout << "Name: " << temp.name << endl;
             cout << "Gender: " << temp.gender << endl;
             cout << "Phone number: " << temp.phoneNo << endl;
             cout << "Email: " << temp.email << endl;
-            cout << "Salary: " << temp.salary << endl;
+            cout << "GPA: " << temp.GPA << endl;
             found = true;
             break;
         }
     }
     if (!found) {
-        cout << "Employee not found!\n";
+        cout << "Student not found!\n";
     }
 }
 
 //-------------------------------update-----------------------------------
 
-void addID(Employee& emp) {
+void addID(Student& std) {
     bool parse_correct = true;
     do {
         cout << "ID: ";
-        cin >> emp.ID;
-        if (!checkIDDuplicate(emp.ID)) {
+        cin >> std.ID;
+        if (!checkIDDuplicate(std.ID)) {
             parse_correct = false;
             //cout << "ID already exists. Please enter a different ID." << endl;
         } else {
@@ -366,7 +366,7 @@ void addID(Employee& emp) {
     } while (!parse_correct);
 }
 
-void addGender(Employee& emp) {
+void addGender(Student& std) {
     bool parse_correct;
     do {
         parse_correct = true;
@@ -377,13 +377,13 @@ void addGender(Employee& emp) {
         cin >> gender;
         switch (gender) {
             case 1:
-                emp.gender = "Male";
+                std.gender = "Male";
                 break;
             case 2:
-                emp.gender = "Female";
+                std.gender = "Female";
                 break;
             case 3:
-                emp.gender = "Homo";
+                std.gender = "Homo";
                 break;
             default:
                 cout << "Invalid input!" << endl;
@@ -393,17 +393,17 @@ void addGender(Employee& emp) {
     } while (!parse_correct);
 }
 
-void addPhoneNo(Employee& emp) {
+void addPhoneNo(Student& std) {
     bool parse_correct = true;
     string addPhoneNoTemp;
     do {
         cout << "Phone number: ";
-        cin >> emp.phoneNo;
-        addPhoneNoTemp = emp.phoneNo;
-        if (emp.phoneNo.length() != 10) {
+        cin >> std.phoneNo;
+        addPhoneNoTemp = std.phoneNo;
+        if (std.phoneNo.length() != 10) {
             parse_correct = false;
             cout << "Phone number must have 10 digits!" << endl;
-        } else if (!checkValidIntegerArray(emp.phoneNo) || !checkPNDuplicate(addPhoneNoTemp)) {
+        } else if (!checkValidIntegerArray(std.phoneNo) || !checkPNDuplicate(addPhoneNoTemp)) {
             parse_correct = false;
         } else {
             parse_correct = true;
@@ -411,12 +411,12 @@ void addPhoneNo(Employee& emp) {
     } while (!parse_correct);
 }
 
-void addSalary(Employee& emp) {
+void addGPA(Student& std) {
     bool parse_correct = true;
     do {
-        cout << "Salary: ";
-        getline(cin, emp.salary);
-        if (!checkValidIntegerArray(emp.salary)) {
+        cout << "GPA: ";
+        getline(cin, std.GPA);
+        if (!checkValidIntegerArray(std.GPA)) {
             parse_correct = false;
         } else {
             parse_correct = true;
@@ -425,16 +425,16 @@ void addSalary(Employee& emp) {
 }
 
 
-bool check_email_update(Employee& emp){
+bool check_email_update(Student& std){
     int i, j, k = 0, count = 0;
     bool atFlag = true;
     bool dotFlag = true;
     char two_words[3] = "@.";
-    getline(cin, emp.email);
+    getline(cin, std.email);
 
-    while (emp.email[k] != '\0')
+    while (std.email[k] != '\0')
     {
-        if(emp.email[k] == ' '){
+        if(std.email[k] == ' '){
             count++;
         }
         k++;
@@ -443,13 +443,13 @@ bool check_email_update(Employee& emp){
     if (count > 0){
         return false;
     }
-    for(i = 0; i < emp.email.length(); i++){
-        if(emp.email[i] == '@'){
+    for(i = 0; i < std.email.length(); i++){
+        if(std.email[i] == '@'){
             atFlag = false;
         }
-        for (j = 0; j < emp.email.length(); j++)
+        for (j = 0; j < std.email.length(); j++)
         {
-            if(emp.email[j] == '.'){
+            if(std.email[j] == '.'){
                 dotFlag = false;
             }
         }
@@ -461,21 +461,21 @@ bool check_email_update(Employee& emp){
     if (atFlag == true && dotFlag == true) return false;
 }
 
-void validEmailCheck_update(Employee& emp) {
+void validEmailCheck_update(Student& std) {
     bool x = true;
     do
     {
         printf("Email: ");
-        x = check_email_update(emp);
+        x = check_email_update(std);
         if (x == false) printf("Invalid email!\n");
     } while (x == false); 
     //return 0;
 }
 
-void addEmail(Employee& emp) {
+void addEmail(Student& std) {
     bool valid = true;
     do {
-        validEmailCheck_update(emp);
+        validEmailCheck_update(std);
         if (!valid) {
             cout << "Invalid email!" << endl;
         }
@@ -484,22 +484,22 @@ void addEmail(Employee& emp) {
 
 
 
-void updateEmployees() {
-    stack<Employee> tempStack, tempStack1, tempStack2 = employees;
-    Employee temp1, temp2;
+void updateStudents() {
+    stack<Student> tempStack, tempStack1, tempStack2 = students;
+    Student temp1, temp2;
     string id;
     char change;
     bool found = false;
     fstream fin("Book2.csv", ios::in | ios::out);
-    cout << "Enter employee's ID to update: ";
+    cout << "Enter student's ID to update: ";
     cin >> id;
     cin.ignore();
 
     while (!tempStack2.empty()) {
-        Employee emp = tempStack2.top();
+        Student std = tempStack2.top();
         tempStack2.pop();
 
-        if ((emp.ID == id) == 1) {
+        if ((std.ID == id) == 1) {
             found = true;
 
             cout << "Do you want to change the name? (Y/N): "; 
@@ -509,7 +509,7 @@ void updateEmployees() {
                 cout << "Name: ";
                 getline(cin, temp1.name);
             }else{
-                temp1.name = emp.name;
+                temp1.name = std.name;
             }
              
             cout << "Do you want to change the gender? (Y/N): ";
@@ -517,7 +517,7 @@ void updateEmployees() {
             if (change == 'Y' || change == 'y') {
                 addGender(temp1);
             } else {
-                temp1.gender = emp.gender;  
+                temp1.gender = std.gender;  
             }
             
             cout << "Do you want to change the email? (Y/N): ";
@@ -526,7 +526,7 @@ void updateEmployees() {
             if (change == 'Y' || change == 'y') {
                 addEmail(temp1);
             } else {
-                temp1.email = emp.email;  
+                temp1.email = std.email;  
             }
         
             cout << "Do you want to change the ID? (Y/N): ";
@@ -534,7 +534,7 @@ void updateEmployees() {
             if (change == 'Y' || change == 'y') {
                 addID(temp1);
             } else {
-                temp1.ID = emp.ID;  
+                temp1.ID = std.ID;  
             }
             
             cout << "Do you want to change the phone number? (Y/N): ";
@@ -543,22 +543,22 @@ void updateEmployees() {
             if (change == 'Y' || change == 'y') {
                 addPhoneNo(temp1);
             } else {
-                temp1.phoneNo = emp.phoneNo;  
+                temp1.phoneNo = std.phoneNo;  
             }
             
-            cout << "Do you want to change the salary? (Y/N): ";
+            cout << "Do you want to change the GPA? (Y/N): ";
             cin >> change;
             cin.ignore();
             if (change == 'Y' || change == 'y') {
-                addSalary(temp1);
+                addGPA(temp1);
             } else {
-                temp1.salary = emp.salary;  
+                temp1.GPA = std.GPA;  
             }
         
             tempStack.push(temp1);
             break;
         } else {
-            tempStack.push(emp);
+            tempStack.push(std);
         }
     }
     
@@ -566,36 +566,36 @@ void updateEmployees() {
         tempStack2.push(tempStack.top());
         tempStack.pop();
     }    
-    employees = tempStack2;
+    students = tempStack2;
     if (found) {
         fin.close();
         ofstream fout("Book2.csv", ios::trunc); // Open the file in truncate mode to clear the existing data
 
         while (!tempStack2.empty()) {
-            Employee temp2 = tempStack2.top();
+            Student temp2 = tempStack2.top();
             temp2.phoneNo.insert(0, " '");
             fout << temp2.name << "," << temp2.gender << ","
                  << temp2.email << "," << temp2.ID << "," << temp2.phoneNo << ","
-                 << temp2.salary << endl;
+                 << temp2.GPA << endl;
 
             tempStack2.pop();
         }
 
         fout.close();
-        cout << "Employee updated successfully!\n";
+        cout << "Student updated successfully!\n";
     } else {
-        cout << "Employee not found!\n";
+        cout << "Student not found!\n";
     }
 }
 
-void deleteEmployee(string id) {
-    stack<Employee> tempStack, tempStack2;
-    Employee temp;
+void deleteStudent(string id) {
+    stack<Student> tempStack, tempStack2;
+    Student temp;
     bool found = false;
     fstream fin("Book2.csv", ios::in | ios::out);
-    while (!employees.empty()) {
-        Employee temp = employees.top();
-        employees.pop();
+    while (!students.empty()) {
+        Student temp = students.top();
+        students.pop();
 
         if ((temp.ID == id) == 1) {
             found = true;
@@ -604,23 +604,23 @@ void deleteEmployee(string id) {
         tempStack.push(temp);
     }
     while (!tempStack.empty()) {
-        employees.push(tempStack.top());
+        students.push(tempStack.top());
         tempStack.pop();
     }
-    tempStack2 = employees;
+    tempStack2 = students;
 
 
 
     if (found) {
-        cout << "Employee with ID " << id << " has been deleted!\n";
+        cout << "Student with ID " << id << " has been deleted!\n";
         fin.seekg(0, ios::beg);
         while(!tempStack2.empty()){
-            fin << tempStack2.top().name << ","<< tempStack2.top().gender << ","<< tempStack2.top().email << ","<< tempStack2.top().ID << ","<< tempStack2.top().phoneNo << ","<< tempStack2.top().salary << endl; 
+            fin << tempStack2.top().name << ","<< tempStack2.top().gender << ","<< tempStack2.top().email << ","<< tempStack2.top().ID << ","<< tempStack2.top().phoneNo << ","<< tempStack2.top().GPA << endl; 
             tempStack2.pop();
         }
 
     } else {
-        cout << "Employee not found!\n";
+        cout << "Student not found!\n";
     }
     fin.close();
 }
@@ -660,23 +660,23 @@ void quicksort(vector<int>& arr, vector<int>& arr1, int low, int high) {
 
 void sortData(){
     //stack<Employee> tempStack = employees, sortedData;
-    Employee temp;
+    Student temp;
     int i, j, l, a = 0, stemp;
-    vector<Employee> tempVector;
-    vector<int> salary, index;
-    while(!employees.empty()){
-        tempVector.push_back(employees.top());
-        stemp = stoi(employees.top().salary);
-        salary.push_back(stemp);
+    vector<Student> tempVector;
+    vector<int> GPA, index;
+    while(!students.empty()){
+        tempVector.push_back(students.top());
+        stemp = stoi(students.top().GPA);
+        GPA.push_back(stemp);
         index.push_back(a);
         a++;
-        employees.pop();
+        students.pop();
     }
     l = tempVector.size();
-    quicksort(salary, index, 0, l-1);
+    quicksort(GPA, index, 0, l-1);
 
     for(auto ele : index){
-        employees.push(tempVector[ele]);
+        students.push(tempVector[ele]);
     }
     cout << "Sort succeeded!!\n";
 
@@ -717,35 +717,35 @@ int main(){
             break;
         
         case 2:
-            cout << "Enter the ID of the employee you want to update: ";
+            cout << "Enter the ID of the student you want to update: ";
 
-            updateEmployees();
+            updateStudents();
             break;
         
         case 3:
 
 
-            searchEmployee();
+            searchStudent();
             break;
         
         case 4:
             //int temp4;
             
-            cout << "Enter the ID of the employee you want to delete: ";
+            cout << "Enter the ID of the student you want to delete: ";
             cin >> temp4;
             
 
-            deleteEmployee(temp4);
+            deleteStudent(temp4);
             break;
         
         case 5:
-            displayEmployees();
+            displayStudents();
             break;
         
         case 6:
 
             sortData();
-            displayEmployees();
+            displayStudents();
 
             break;
 
