@@ -29,7 +29,7 @@ void validEmailCheck();
 bool caseCheck(int n);
 void addPhoneNo();
 bool checkValidIntegerArray(string n);
-bool checkIDDuplicate(string ad);
+bool checkIDDuplicate(string id);
 bool checkPNDuplicate(string pn);
 
 void add();
