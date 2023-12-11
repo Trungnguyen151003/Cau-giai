@@ -1,0 +1,29 @@
+void countGPA() {
+    string studentID;
+    cout << "Enter the student ID to calculate GPA: ";
+    cin >> studentID;
+    cin.ignore();
+
+    stack<Student> tempStack = students;
+    bool found = false;
+    while (!tempStack.empty()) {
+        const Student& temp = tempStack.top();
+
+        if (temp.ID == studentID) {
+            found = true;
+            double totalScore = 0.0;
+            for (const Score& score : temp.scores) {
+                totalScore += score.score;
+            }
+            double GPA = totalScore / temp.scores.size();
+            cout << "GPA for student " << temp.name << " (ID: " << temp.ID << ") is: " << GPA << endl;
+            break;
+        }
+
+        tempStack.pop();
+    }
+
+    if (!found) {
+        cout << "Student with ID " << studentID << " not found!\n";
+    }
+}
