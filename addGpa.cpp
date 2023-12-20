@@ -9,8 +9,7 @@ struct Student
     string subjects;
     string phoneNo;
     string ID;
-    string GPA;
-    double average;
+    string score;
 }info ;
 stack<Student> students;
 stack<Student> point;
@@ -31,7 +30,7 @@ void searchStudent();
 void deleteStudent(string id);
 
 void addID();
-void addGPA();
+void addScore();
 int partition(vector<int>& arr1, vector<int>& arr2, int low, int high);
 void quicksort(vector<int>& arr1, vector<int>& arr2, int low, int high);
 void sortData();
@@ -39,8 +38,6 @@ void sortData();
 void add();
 void add2();
 
-void addID();
-void addGPA();
 
 void predisplay(){
 	cout << "                                _____ _______ __   __ _______ _____  ______ _   _ _______   " << endl;
@@ -74,7 +71,7 @@ void readCSVFile() {
         getline(ss, e.email, ',');
         getline(ss, e.ID, ',');
         getline(ss, e.phoneNo, ',');
-        getline(ss, e.GPA, ',');
+        getline(ss, e.score, ',');
         e.phoneNo.erase(0,2);
         students.push(e);
     }
@@ -92,7 +89,7 @@ void readCSVFile2() {
             continue;
         }
         getline(ss, e.ID, ',');
-        getline(ss, e.GPA, ',');
+        getline(ss, e.score, ',');
         getline(ss, e.subjects, ',');
         point.push(e);
     }
@@ -202,7 +199,6 @@ void addPhoneNo(){
 }
 
 void addID(){
-    cin.ignore();
     cout << "ID: ";
     getline(cin, info.ID);
 }
@@ -263,10 +259,7 @@ void add(){
     addPhoneNo();
     
     students.push(info);
-    cout << info.ID.size() << "\t" << info.gender.size() << "\t" << endl;
-    info.phoneNo.insert(0, "'");
     fout << info.name << "," << info.gender << "," << info.email << "," << info.ID << "," << info.phoneNo << "," << endl;
-    cout << info.phoneNo;
     fout.close();
 }
 
@@ -280,7 +273,7 @@ void displayStudents(){
         cout << "|                                               LIST OF STUDENTS                                               |" << endl;
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
         cout << "|    ID     |            Name          |  Gender |           Email          |" 
-                << "     Phone Number     |  GPA   |" << endl;
+                << "     Phone Number     |" << endl;
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
 
         while(!tempStack.empty()){
@@ -300,13 +293,13 @@ void displayAllStudentsDetails() {
         cout << "No student in the system!\n";
     } else {
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
-        cout << "|    ID       |          Name             |    GPA    |" << endl;
+        cout << "|    ID       |          Name             |    Point    |" << endl;
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
 
         while (!tempStack.empty()) {
             Student temp = tempStack.top();
             tempStack.pop();
-            cout << "| " << left << setw(11) << temp.ID << " | " << setw(25) << temp.subjects << " | " << setw(9) << temp.GPA << " |" << endl; 
+            cout << "| " << left << setw(11) << temp.ID << " | " << setw(25) << temp.subjects << " | " << setw(9) << temp.score << " |" << endl; 
         }
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
     }
@@ -328,9 +321,10 @@ void add2() {
         tempStack.pop();
         if(id == temp.ID)
         {
-            point.push(temp);
+            
             fout << temp.ID;
             found = true;
+            break;
         }
     }
     if (found == true) {
@@ -338,9 +332,9 @@ void add2() {
             cout << "Mon " << i << ": "; 
             getline(cin, info.subjects);
             cout << "Point: ";
-            getline(cin, info.GPA);
+            getline(cin, info.score);
             point.push(info);
-            fout << "," <<  info.GPA << "," << info.subjects << endl;
+            fout << "," <<  info.score << "," << info.subjects << endl;
         }
     }
     if(found == false)
@@ -493,15 +487,15 @@ void updateStudents() {
     char change;
     bool found = false;
     fstream fin("Book2.csv", ios::in | ios::out);
-    cout << "Enter student's ID to update: ";
+    cout << "Enter employee's ID to update: ";
     cin >> id;
     cin.ignore();
 
     while (!tempStack2.empty()) {
-        Student std = tempStack2.top();
+        Student emp = tempStack2.top();
         tempStack2.pop();
 
-        if ((std.ID == id) == 1) {
+        if ((emp.ID == id) == 1) {
             found = true;
 
             cout << "Do you want to change the name? (Y/N): "; 
@@ -511,7 +505,7 @@ void updateStudents() {
                 cout << "Name: ";
                 getline(cin, temp1.name);
             }else{
-                temp1.name = std.name;
+                temp1.name = emp.name;
             }
              
             cout << "Do you want to change the gender? (Y/N): ";
@@ -519,7 +513,7 @@ void updateStudents() {
             if (change == 'Y' || change == 'y') {
                 addGender(temp1);
             } else {
-                temp1.gender = std.gender;  
+                temp1.gender = emp.gender;  
             }
             
             cout << "Do you want to change the email? (Y/N): ";
@@ -528,7 +522,7 @@ void updateStudents() {
             if (change == 'Y' || change == 'y') {
                 addEmail(temp1);
             } else {
-                temp1.email = std.email;  
+                temp1.email = emp.email;  
             }
         
             cout << "Do you want to change the ID? (Y/N): ";
@@ -536,7 +530,7 @@ void updateStudents() {
             if (change == 'Y' || change == 'y') {
                 addID(temp1);
             } else {
-                temp1.ID = std.ID;  
+                temp1.ID = emp.ID;  
             }
             
             cout << "Do you want to change the phone number? (Y/N): ";
@@ -545,11 +539,13 @@ void updateStudents() {
             if (change == 'Y' || change == 'y') {
                 addPhoneNo(temp1);
             } else {
-                temp1.phoneNo = std.phoneNo;  
+                temp1.phoneNo = emp.phoneNo;  
             }
-            
+        
+            tempStack.push(temp1);
+            break;
         } else {
-            tempStack.push(std);
+            tempStack.push(emp);
         }
     }
     
@@ -567,17 +563,18 @@ void updateStudents() {
             temp2.phoneNo.insert(0, " '");
             fout << temp2.name << "," << temp2.gender << ","
                  << temp2.email << "," << temp2.ID << "," << temp2.phoneNo << ","
-                 << temp2.GPA << endl;
+                 << endl;
 
             tempStack2.pop();
         }
 
         fout.close();
-        cout << "Student updated successfully!\n";
+        cout << "Employee updated successfully!\n";
     } else {
-        cout << "Student not found!\n";
+        cout << "Employee not found!\n";
     }
 }
+
 
 void deleteStudent(string id) {
     stack<Student> tempStack, tempStack2;
@@ -633,8 +630,8 @@ int main(){
         cout << "4. Remove a info\n";
         cout << "5. List all datas\n";
         cout << "6. Sort datas\n";
-        cout << "7. List all gpa\n";
-        cout << "8. Add GPA\n";
+        cout << "7. List all point\n";
+        cout << "8. Add point\n";
         cout << "9. Exit\n\n";
         cout << "==========================\n\n";
         cout << "Your option: ";
