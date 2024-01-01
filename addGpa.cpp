@@ -334,6 +334,7 @@ void add2() {
     if (found == true) {
         double totalScore = 0.0;
         double totalCredit = 0.0;
+        double mult = 0.0;
         for (int i = 1; i <= 5; i++) {
             cout << "Mon " << i << ": "; 
             getline(cin, info.subjects);
@@ -342,7 +343,8 @@ void add2() {
             cout << "Credit: ";
             getline(cin, info.credit);
             totalCredit += stod(info.credit);
-            totalScore += stod(info.score);
+            mult = stod(info.score) * stod(info.credit);
+            totalScore += mult;
             point.push(info);
             fout << "," <<  info.subjects << "," << info.credit << "," << info.score<< endl;
         }
