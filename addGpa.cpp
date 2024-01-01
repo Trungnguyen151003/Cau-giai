@@ -10,6 +10,8 @@ struct Student
     string phoneNo;
     string ID;
     string score;
+    string credit;
+    string gpa;
 }info ;
 stack<Student> students;
 stack<Student> point;
@@ -71,8 +73,6 @@ void readCSVFile() {
         getline(ss, e.email, ',');
         getline(ss, e.ID, ',');
         getline(ss, e.phoneNo, ',');
-        getline(ss, e.score, ',');
-        e.phoneNo.erase(0,2);
         students.push(e);
     }
     file.close();
@@ -89,8 +89,10 @@ void readCSVFile2() {
             continue;
         }
         getline(ss, e.ID, ',');
-        getline(ss, e.score, ',');
         getline(ss, e.subjects, ',');
+        getline(ss, e.credit, ',');
+        getline(ss, e.score, ',');
+        getline(ss, e.gpa, ',');
         point.push(e);
     }
     file.close();
@@ -281,7 +283,7 @@ void displayStudents(){
             tempStack.pop();
             cout << "| " << left << setw(9) << temp.ID << " | " << setw(24) << temp.name << " | " << setw(7) 
                          << temp.gender << " | " << setw(24) << temp.email << " | " << setw(20) 
-                         << temp.phoneNo << " | " << setw(9)  << " | " << endl; 
+                         << temp.phoneNo << " | "  << endl; 
             }
             cout << "----------------------------------------------------------------------------------------------------------------" << endl;
     }
@@ -293,17 +295,19 @@ void displayAllStudentsDetails() {
         cout << "No student in the system!\n";
     } else {
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
-        cout << "|    ID       |          Name             |    Point    |" << endl;
+        cout << "|    ID       |          Subject             |    Credit    |    Score    |    GPA    |" << endl;
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
 
         while (!tempStack.empty()) {
             Student temp = tempStack.top();
             tempStack.pop();
-            cout << "| " << left << setw(11) << temp.ID << " | " << setw(25) << temp.subjects << " | " << setw(9) << temp.score << " |" << endl; 
+            cout << "| " << left << setw(11) << temp.ID << " | " << setw(28) << temp.subjects << " | " << setw(12) << temp.credit << " | " << setw(11) << temp.score << " |" << 
+            setw(11) <<fixed<<setprecision(2)<< temp.gpa<<"|" << endl;
         }
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
     }
 }
+    
 
 void add2() {
     fstream fout;
@@ -321,21 +325,35 @@ void add2() {
         tempStack.pop();
         if(id == temp.ID)
         {
-            
+            point.push(temp);
             fout << temp.ID;
             found = true;
             break;
         }
     }
     if (found == true) {
+        double totalScore = 0.0;
+        double totalCredit = 0.0;
         for (int i = 1; i <= 5; i++) {
             cout << "Mon " << i << ": "; 
             getline(cin, info.subjects);
             cout << "Point: ";
             getline(cin, info.score);
+            cout << "Credit: ";
+            getline(cin, info.credit);
+            totalCredit += stod(info.credit);
+            totalScore += stod(info.score);
             point.push(info);
-            fout << "," <<  info.score << "," << info.subjects << endl;
+            fout << "," <<  info.subjects << "," << info.credit << "," << info.score<< endl;
         }
+        double averageScore = totalScore / totalCredit;
+        cout << "Average Score: " << averageScore << endl;
+
+        // Push the average score into the point stack
+        Student averageInfo;
+        averageInfo.gpa = to_string(averageScore);
+        point.push(averageInfo);
+        fout << "," << ","<< "," <<","<< averageInfo.gpa << endl;
     }
     if(found == false)
     {
@@ -344,6 +362,7 @@ void add2() {
 
     fout.close();
 }
+
 
 void searchStudent() {
     stack<Student> tempStack = students;
@@ -487,7 +506,7 @@ void updateStudents() {
     char change;
     bool found = false;
     fstream fin("Book2.csv", ios::in | ios::out);
-    cout << "Enter employee's ID to update: ";
+    cout << "Enter student's ID to update: ";
     cin >> id;
     cin.ignore();
 
