@@ -9,6 +9,7 @@ struct Student
     string subjects;
     string phoneNo;
     string ID;
+    string falcuty;
     string score;
     string credit;
     string gpa;
@@ -73,6 +74,7 @@ void readCSVFile() {
         getline(ss, e.email, ',');
         getline(ss, e.ID, ',');
         getline(ss, e.phoneNo, ',');
+        getline(ss, e.falcuty, ',');
         students.push(e);
     }
     file.close();
@@ -230,6 +232,16 @@ void addID(Student& std) {
     }while(!parse_correct);
 }
 
+bool checkValidIntegerArray(string n){
+    for(auto i : n){
+        if(!isdigit(i)){
+            cout << "Invalid Input!";
+            return false;
+        }
+    }
+    return true;
+}
+
 bool checkIDDuplicate(string id){
     stack<Student> tempStack = students;
     bool found = false;
@@ -245,16 +257,6 @@ bool checkIDDuplicate(string id){
         }
     }
     
-    return true;
-}
-
-bool checkValidIntegerArray(string n){
-    for(auto i : n){
-        if(!isdigit(i)){
-            cout << "Invalid Input!";
-            return false;
-        }
-    }
     return true;
 }
 
@@ -283,10 +285,11 @@ void add(){
     getline(cin, info.name);            //dunno why but it works ?!
     cout << "Name: ";
     getline(cin, info.name);
+    cout << "Falcuty: ";
+    getline(cin, info.falcuty);
     int checkIfExit = info.name.compare(exit);
     if(checkIfExit == 0){
         return;
-
     }
 
     addGender();
@@ -299,7 +302,7 @@ void add(){
     addPhoneNo();
     
     students.push(info);
-    fout << info.name << "," << info.gender << "," << info.email << "," << info.ID << "," << info.phoneNo << "," << endl;
+    fout << info.name << "," << info.gender << "," << info.email << "," << info.ID << "," << info.phoneNo << "," << info.falcuty << endl;
     fout.close();
 }
 
@@ -309,21 +312,21 @@ void displayStudents(){
     if (tempStack.empty()) {
         cout << "No student in the system!\n";
     } else {
-        cout << "---------------------------------------------------------------------------------------------------------------" << endl;
-        cout << "|                                               LIST OF STUDENTS                                               |" << endl;
-        cout << "---------------------------------------------------------------------------------------------------------------" << endl;
+        cout << "-----------------------------------------------------------------------------------------------------------------------" << endl;
+        cout << "|                                               LIST OF STUDENTS                                                       |" << endl;
+        cout << "-----------------------------------------------------------------------------------------------------------------------" << endl;
         cout << "|    ID     |            Name          |  Gender |           Email          |" 
-                << "     Phone Number     |" << endl;
-        cout << "---------------------------------------------------------------------------------------------------------------" << endl;
+                << "     Phone Number     |        Falcuty    |" << endl;
+        cout << "-----------------------------------------------------------------------------------------------------------------------" << endl;
 
         while(!tempStack.empty()){
             Student temp = tempStack.top();
             tempStack.pop();
             cout << "| " << left << setw(9) << temp.ID << " | " << setw(24) << temp.name << " | " << setw(7) 
                          << temp.gender << " | " << setw(24) << temp.email << " | " << setw(20) 
-                         << temp.phoneNo << " | "  << endl; 
+                         << temp.phoneNo << " | "  << setw(18) << temp.falcuty<<"|"<< endl; 
             }
-            cout << "----------------------------------------------------------------------------------------------------------------" << endl;
+            cout << "------------------------------------------------------------------------------------------------------------------------" << endl;
     }
 }
 
@@ -340,7 +343,7 @@ void displayAllStudentsDetails() {
             Student temp = tempStack.top();
             tempStack.pop();
             cout << "| " << left << setw(11) << temp.ID << " | " << setw(28) << temp.subjects << " | " << setw(12) << temp.credit << " | " << setw(11) << temp.score << " |" << 
-            setw(11) <<fixed<<setprecision(2)<< temp.gpa<<"|" << endl;
+            setw(11) << temp.gpa<<"|" << endl;
         }
         cout << "---------------------------------------------------------------------------------------------------------------" << endl;
     }
@@ -374,7 +377,7 @@ void add2() {
         double totalCredit = 0.0;
         double mult = 0.0;
         for (int i = 1; i <= 5; i++) {
-            cout << "Mon " << i << ": "; 
+            cout << "Subject: " << i << ": "; 
             getline(cin, info.subjects);
             cout << "Point: ";
             getline(cin, info.score);
@@ -386,8 +389,8 @@ void add2() {
             point.push(info);
             fout << "," <<  info.subjects << "," << info.credit << "," << info.score<< endl;
         }
-        double averageScore = totalScore / totalCredit;
-        cout << "Average Score: " << averageScore << endl;
+        double averageScore = ((totalScore / totalCredit)/10)*4;
+        cout << "Average Score: " <<fixed<<setprecision(2)<< averageScore << endl;
 
         // Push the average score into the point stack
         Student averageInfo;
@@ -399,7 +402,7 @@ void add2() {
     {
         cout << "ID not found " << endl;
     }
-
+    
     fout.close();
 }
 
@@ -628,9 +631,9 @@ void updateStudents() {
         }
 
         fout.close();
-        cout << "Employee updated successfully!\n";
+        cout << "Student updated successfully!\n";
     } else {
-        cout << "Employee not found!\n";
+        cout << "Student not found!\n";
     }
 }
 
@@ -671,6 +674,57 @@ void deleteStudent(string id) {
     }
     fin.close();
 }
+
+int partition(vector<Student>& arr, vector<int>& index, int low, int high) {
+    string pivot = arr[high].falcuty;  // Choosing the last element as the pivot
+    int i = low - 1;
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j].falcuty < pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+            swap(index[i], index[j]);
+        }
+    }
+
+    swap(arr[i + 1], arr[high]);
+    swap(index[i + 1], index[high]);
+
+    return i + 1;
+}
+
+void quicksort(vector<Student>& arr, vector<int>& index, int low, int high) {
+    if (low < high) {
+        int pivot_index = partition(arr, index, low, high);
+
+        quicksort(arr, index, low, pivot_index - 1);
+        quicksort(arr, index, pivot_index + 1, high);
+    }
+}
+
+void sortData() {
+    Student temp;
+    int i, j, l, a = 0, stemp;
+    vector<Student> tempVector;
+    vector<int> index;
+    
+    while (!students.empty()) {
+        tempVector.push_back(students.top());
+        index.push_back(a);
+        a++;
+        students.pop();
+    }
+
+    l = tempVector.size();
+    quicksort(tempVector, index, 0, l - 1);
+
+    for (auto ele : index) {
+        students.push(tempVector[ele]);
+    }
+
+    cout << "Sort succeeded!!\n";
+}
+
 
 int main(){
     readCSVFile();
@@ -737,7 +791,7 @@ int main(){
         
         case 6:
 
-            //sortData();
+            sortData();
             displayStudents();
 
             break;
