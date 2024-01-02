@@ -282,7 +282,7 @@ void add(){
     string exit = " ";
 
     cout << "Adding element: \n(Enter *Blankspace* to exit)" << endl;
-    getline(cin, info.name);            //dunno why but it works ?!
+    getline(cin, info.name);            
     cout << "Name: ";
     getline(cin, info.name);
     cout << "Falcuty: ";
@@ -431,6 +431,7 @@ void searchStudent() {
             cout << "Gender: " << temp.gender << endl;
             cout << "Phone number: " << temp.phoneNo << endl;
             cout << "Email: " << temp.email << endl;
+            cout << "Falcuty: " << temp.falcuty << endl;
             found = true;
             break;
         }
@@ -603,6 +604,16 @@ void updateStudents() {
             } else {
                 temp1.phoneNo = emp.phoneNo;  
             }
+
+            cout << "Do you want to change the falcuty? (Y/N): "; 
+            cin >> change;
+            if (change == 'Y' || change == 'y'){
+                cin.ignore();
+                cout << "Falcuty: ";
+                getline(cin, temp1.falcuty);
+            }else{
+                temp1.falcuty = emp.falcuty;
+            }
         
             tempStack.push(temp1);
             break;
@@ -624,7 +635,7 @@ void updateStudents() {
             Student temp2 = tempStack2.top();
             temp2.phoneNo.insert(0, " '");
             fout << temp2.name << "," << temp2.gender << ","
-                 << temp2.email << "," << temp2.ID << "," << temp2.phoneNo << ","
+                 << temp2.email << "," << temp2.ID << "," << temp2.phoneNo << "," << temp2.falcuty << ","
                  << endl;
 
             tempStack2.pop();
@@ -665,7 +676,7 @@ void deleteStudent(string id) {
         cout << "Student with ID " << id << " has been deleted!\n";
         fin.seekg(0, ios::beg);
         while(!tempStack2.empty()){
-            fin << tempStack2.top().name << ","<< tempStack2.top().gender << ","<< tempStack2.top().email << ","<< tempStack2.top().ID << ","<< tempStack2.top().phoneNo << "," << endl; 
+            fin << tempStack2.top().name << ","<< tempStack2.top().gender << ","<< tempStack2.top().email << ","<< tempStack2.top().ID << ","<< tempStack2.top().phoneNo << "," << tempStack2.top().falcuty << "," <<endl; 
             tempStack2.pop();
         }
 
