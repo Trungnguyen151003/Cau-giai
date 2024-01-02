@@ -201,13 +201,51 @@ void addPhoneNo(){
 }
 
 void addID(){
-    cout << "ID: ";
-    getline(cin, info.ID);
+    bool parse_correct = true;
+    // int addIDTemp;
+    do{
+        cout << "ID: ";
+        getline(cin, info.ID);
+        // addIDTemp = stoi(info.ID);
+        if(!checkIDDuplicate(info.ID)){
+            parse_correct = false;
+        } else{
+            parse_correct = true;
+        }
+    }while(!parse_correct);
 }
 
 void addID(Student& std) {
-    cout << "ID: ";
-    getline(cin, std.ID);
+    bool parse_correct = true;
+    // int addIDTemp;
+    do{
+        cout << "ID: ";
+        getline(cin, std.ID);
+        // addIDTemp = stoi(info.ID);
+        if(!checkIDDuplicate(std.ID)){
+            parse_correct = false;
+        } else{
+            parse_correct = true;
+        }
+    }while(!parse_correct);
+}
+
+bool checkIDDuplicate(string id){
+    stack<Student> tempStack = students;
+    bool found = false;
+    //cout << id << "  " << id.size() << endl;
+    while (!tempStack.empty()) {
+        Student temp = tempStack.top();
+        tempStack.pop();
+        //cout << temp.ID << "  " << temp.ID.size() << "\t" <<endl;
+        
+        if ((temp.ID == id) == 1) {
+            cout << "ID already appeared in the database! Please check again\n";
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 bool checkValidIntegerArray(string n){
